@@ -1,0 +1,36 @@
+# Ignorer les environnements virtuels
+venv/
+env/
+__pycache__/
+*.pyc
+
+# Ignorer les checkpoints Jupyter Notebook
+.ipynb_checkpoints/
+
+# Ignorer les fichiers MLflow
+mlruns/
+mlflow_model/
+
+# Ignorer les modèles sauvegardés
+*.joblib
+*.pkl
+*.h5
+
+# Ignorer les fichiers de logs et caches
+*.log
+*.csv
+*.parquet
+*.json
+
+# Ignorer les fichiers Word et Excel
+*.docx
+*.xlsx
+
+# Ignorer les images et visualisations générées
+*.png
+*.jpg
+*.jpeg
+
+# 🛑 Ignorer les fichiers spécifiques au projet
+saved_data/
+Données P7/
