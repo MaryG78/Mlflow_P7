@@ -12,7 +12,6 @@ mlruns/
 
 # Ignorer les modèles sauvegardés
 *.joblib
-*.pkl
 *.h5
 
 # Ignorer les fichiers de logs et caches
