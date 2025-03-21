@@ -1,13 +1,13 @@
 import sys
 import os
 
-# Ajout du dossier du projet au path
-path = '/home/GuiM78/P7Scoring'
+# Ajouter le dossier de l'API au sys.path
+path = '/home/GuiM78/P7Scoring/api'  
 if path not in sys.path:
     sys.path.append(path)
 
-# Définition du bon répertoire de travail
+# Définir le bon répertoire de travail
 os.chdir(path)
 
-# Import de l'application
+# Importer l'application Flask
 from app import app as application
