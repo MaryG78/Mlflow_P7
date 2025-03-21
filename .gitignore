@@ -9,7 +9,6 @@ __pycache__/
 
 # Ignorer les fichiers MLflow
 mlruns/
-mlflow_model/
 
 # Ignorer les modèles sauvegardés
 *.joblib
