@@ -17,11 +17,16 @@ def home():
 def predict():
     try:
         data = request.get_json()
-        df = pd.DataFrame.from_dict(data["dataframe_split"])
+        df = pd.DataFrame(**data["dataframe_split"])
+
+        # FORCER LA CONVERSION en float32 dans l'API
+        df = df.astype("float32")
+
         predictions = model.predict(df)
         return jsonify({"predictions": predictions.tolist()})
     except Exception as e:
         return jsonify({"error": str(e)}), 400
+
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=8080)
