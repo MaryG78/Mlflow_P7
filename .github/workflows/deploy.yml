@@ -1,4 +1,4 @@
-name: Run tests and (optionally) deploy
+name: Deploy to PythonAnywhere 
 
 on:
   push:
@@ -25,3 +25,9 @@ jobs:
       - name: Run unit tests
         run: |
           python -m unittest discover tests
+
+      - name: Deploy to PythonAnywhere
+        if: success()
+        run: |
+          curl -X POST "https://www.pythonanywhere.com/api/v0/user/GuiM78/webapps/GuiM78.pythonanywhere.com/reload/" \
+               -H "Authorization: Token ${{ secrets.PA_API_TOKEN }}"
