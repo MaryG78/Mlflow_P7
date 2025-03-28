@@ -3,6 +3,7 @@ import os
 os.environ["LOKY_MAX_CPU_COUNT"] = "1"
 
 from flask import Flask, request, jsonify
+import joblib
 import mlflow.pyfunc
 import pandas as pd
 
