@@ -49,7 +49,7 @@ input_row = {
     "INSTAL_AMT_INSTALMENT_MAX": 19147.814453125
 }
 
-# Afficher un champ pour chaque variable
+# Affichage d'un champ pour chaque variable
 user_input = {}
 for key, default_value in input_row.items():
     user_input[key] = st.number_input(key, value=float(default_value))
