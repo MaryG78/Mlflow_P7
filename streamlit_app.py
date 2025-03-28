@@ -5,7 +5,7 @@ import requests
 st.title("Prédiction de Score de Crédit")
 st.write("Entrez les données du client :")
 
-# ➤ Utilise les mêmes valeurs que dans ton test
+# Valeurs par défaut
 input_row = {
     "EXT_SOURCE_2_EXT_SOURCE_3": 0.18038125336170197,
     "EXT_SOURCE_2_DAYS_BIRTH": -3561.166015625,
@@ -49,12 +49,18 @@ input_row = {
     "INSTAL_AMT_INSTALMENT_MAX": 19147.814453125
 }
 
+# Afficher un champ pour chaque variable
+user_input = {}
+for key, default_value in input_row.items():
+    user_input[key] = st.number_input(key, value=float(default_value))
+
+# Bouton d'envoi
 if st.button("Obtenir le score du client"):
-    df = pd.DataFrame([input_row]).astype("float32")
+    df = pd.DataFrame([user_input]).astype("float32")
     url = "https://guim78.pythonanywhere.com/predict"
-
+    
     response = requests.post(url, json={"dataframe_split": df.to_dict(orient="split")})
-
+    
     if response.status_code == 200:
         prediction = response.json()["predictions"][0]
         st.success(f"Probabilité de remboursement : {prediction:.2f}")
