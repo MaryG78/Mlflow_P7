@@ -26,8 +26,18 @@ jobs:
         run: |
           python -m unittest discover tests
 
-      - name: Call update.sh on PythonAnywhere
+            - name: Set up SSH key
+          run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.PA_SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan ssh.pythonanywhere.com >> ~/.ssh/known_hosts
+
+      - name: Git pull on PythonAnywhere
         run: |
-          curl -X POST "https://www.pythonanywhere.com/api/v0/user/GuiM78/consoles/execute/" \
-               -H "Authorization: Token ${{ secrets.PA_API_TOKEN }}" \
-               -d 'command=bash /home/GuiM78/Mlflow_P7/update.sh'
+          ssh guim78@ssh.pythonanywhere.com 'cd Mlflow_P7 && git reset --hard origin/main && git pull origin main'
+
+      - name: Reload web app
+        run: |
+          curl -X POST "https://www.pythonanywhere.com/api/v0/user/GuiM78/webapps/guim78.pythonanywhere.com/reload/" \
+               -H "Authorization: Token ${{ secrets.PA_API_TOKEN }}"
