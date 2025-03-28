@@ -1,10 +1,11 @@
+import os
+# Fix pour éviter l'erreur LOKY sur PythonAnywhere
+
+os.environ["LOKY_MAX_CPU_COUNT"] = "1"
 from flask import Flask, request, jsonify
 import mlflow.pyfunc
 import pandas as pd
-import os
 
-# Fix pour éviter l'erreur LOKY sur PythonAnywhere
-os.environ["LOKY_MAX_CPU_COUNT"] = "1"
 
 app = Flask(__name__)
 
