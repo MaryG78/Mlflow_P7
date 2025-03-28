@@ -35,7 +35,7 @@ jobs:
 
       - name: Git pull on PythonAnywhere
         run: |
-          ssh guim78@ssh.pythonanywhere.com 'cd Mlflow_P7 && git reset --hard origin/main && git pull origin main'
+          ssh guim78@ssh.pythonanywhere.com 'cd Mlflow_P7 && git pull origin main'
 
       - name: Reload web app
         run: |
