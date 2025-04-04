@@ -11,7 +11,7 @@ import pandas as pd
 app = Flask(__name__)
 
 # Chargement du modèle sauvegardé avec joblib
-model_path = os.path.join(os.path.dirname(__file__), "..", "best_model.joblib")
+model_path = os.path.join(os.path.dirname(__file__), "..", "best_model_20_features.joblib")
 model = joblib.load(model_path)
 
 @app.route("/", methods=["GET"])
