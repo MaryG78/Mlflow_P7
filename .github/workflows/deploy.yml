@@ -1,4 +1,4 @@
-name: Deploy to PythonAnywhere 
+name: Deploy to PythonAnywhere
 
 on:
   push:
@@ -10,34 +10,23 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
+      - name: 📥 Cloner le dépôt
         uses: actions/checkout@v3
 
-      - name: Set up Python
+      - name: 🐍 Installer Python
         uses: actions/setup-python@v4
         with:
           python-version: '3.9'
 
-      - name: Install dependencies
+      - name: 📦 Installer les dépendances
         run: |
           pip install -r api/requirements.txt
 
-      - name: Run unit tests
+      - name: 🧪 Exécuter les tests unitaires
         run: |
           python -m unittest discover tests
 
-      - name: Set up SSH key
-        run: |
-          mkdir -p ~/.ssh
-          echo "${{ secrets.PA_SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan ssh.pythonanywhere.com >> ~/.ssh/known_hosts
-
-      - name: Git pull on PythonAnywhere
-        run: |
-          ssh guim78@ssh.pythonanywhere.com 'cd Mlflow_P7 && git pull origin main'
-
-      - name: Reload web app
+      - name: 🚀 Recharger l'app sur PythonAnywhere
         run: |
           curl -X POST "https://www.pythonanywhere.com/api/v0/user/GuiM78/webapps/guim78.pythonanywhere.com/reload/" \
                -H "Authorization: Token ${{ secrets.PA_API_TOKEN }}"
