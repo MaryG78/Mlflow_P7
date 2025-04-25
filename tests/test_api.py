@@ -20,7 +20,7 @@ class TestAPI(unittest.TestCase):
 
     def test_predict(self):
         # Ligne de test avec les 20 features du modèle
-                input_row = {
+        input_row = {
             "CC_CNT_DRAWINGS_ATM_CURRENT_MEAN": 0.5714285969734192,
             "BURO_DAYS_CREDIT_MIN": -2663.0,
             "INSTAL_AMT_PAYMENT_MIN": 8693.639648,
@@ -44,8 +44,8 @@ class TestAPI(unittest.TestCase):
         }
 
 
-        df = pd.DataFrame([input_row])  # Une seule ligne
-        df = df.astype("float32")       # Cast obligatoire pour ton modèle
+        df = pd.DataFrame([input_row])  
+        df = df.astype("float32")       
 
         test_data = {"dataframe_split": df.to_dict(orient="split")}
 
