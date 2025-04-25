@@ -42,7 +42,7 @@ if st.button("Obtenir le score du client"):
     
     if response.status_code == 200:
         prediction = response.json()["predictions"][0]
-        st.success(f"Probabilité de remboursement : {prediction:.2f}")
+        st.success(f"Probabilité de défaut de paiement : {prediction:.2f}")
     else:
         st.error(f"Erreur API : {response.status_code}")
         st.write(response.text)
