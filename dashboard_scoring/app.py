@@ -7,7 +7,6 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np
 from api_utils import get_client_score
-from shap_model_utils import load_shap_model
 from visualizations import (
     plot_score_gauge,
     plot_lime_local,
