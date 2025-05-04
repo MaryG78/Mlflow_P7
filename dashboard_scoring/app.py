@@ -22,7 +22,22 @@ from client_data import get_client_list, get_client_data, get_raw_client_info, l
 st.set_page_config(page_title="Dashboard Scoring Crédit", layout="wide")
 st.title("📊 Dashboard Scoring - Relation Client")
 
-client_id = st.selectbox("Sélectionnez un numéro de client :", get_client_list())
+# Vérification des chemins de fichiers disponibles
+if st.sidebar.checkbox("Vérifier les fichiers disponibles (Debug)"):
+    st.sidebar.write("Répertoire courant:", os.getcwd())
+    st.sidebar.write("Contenu du répertoire courant:", os.listdir())
+    if os.path.exists("saved_data"):
+        st.sidebar.write("Contenu du dossier saved_data:", os.listdir("saved_data"))
+    else:
+        st.sidebar.error("Le dossier saved_data n'existe pas!")
+
+# Liste des clients
+client_list = get_client_list()
+if not client_list or client_list[0] == "Erreur de chargement des données":
+    st.error("Impossible de charger la liste des clients. Vérifiez que le fichier Base_client.parquet existe dans le dossier saved_data.")
+    st.stop()
+
+client_id = st.selectbox("Sélectionnez un numéro de client :", client_list)
 
 if client_id:
     try:
@@ -104,7 +119,7 @@ if client_id:
     # Interprétation niveau client
     with col_locale:
         st.subheader("📊 Interprétation locale du score")
-        with st.expander("Voir l’interprétation locale"):
+        with st.expander("Voir l'interprétation locale"):
             try:
                 model = load_shap_model()
                 fig_lime = plot_lime_local(
@@ -175,15 +190,15 @@ if client_id:
             "INSTAL_DPD_MEAN": "Moy. jours de retard paiement",
             "EXT_SOURCE_3_DAYS_BIRTH": "Source externe 3 x Âge",
             "APPROVED_AMT_ANNUITY_MEAN": "Moy. mensualités (crédits approuvés)",
-            "INSTAL_DAYS_ENTRY_PAYMENT_MAX": "Max. décalage date d’enregistrement paiement",
+            "INSTAL_DAYS_ENTRY_PAYMENT_MAX": "Max. décalage date d'enregistrement paiement",
             "CC_CNT_DRAWINGS_ATM_CURRENT_VAR": "Var. retraits DAB carte crédit",
             "EXT_SOURCE_1_EXT_SOURCE_3": "Source externe 1 x 3",
             "EXT_SOURCE_2_EXT_SOURCE_3": "Source externe 2 x 3",
             "CREDIT_TERM": "Durée du crédit",
-            "INSTAL_DAYS_ENTRY_PAYMENT_SUM": "Somme décalage dates d’enregistrement paiements",
+            "INSTAL_DAYS_ENTRY_PAYMENT_SUM": "Somme décalage dates d'enregistrement paiements",
             "INSTAL_PAYMENT_DIFF_MEAN": "Moy. des écarts montant dû – payé",
             "INSTAL_AMT_PAYMENT_MAX": "Paiement maximum effectué",
-            "BURO_DAYS_CREDIT_ENDDATE_MEAN": "Moy. jours jusqu’à fin des crédits",
+            "BURO_DAYS_CREDIT_ENDDATE_MEAN": "Moy. jours jusqu'à fin des crédits",
             "INSTAL_PAYMENT_PERC_MEAN": "Moy. proportion payé / dû",
             "INSTAL_AMT_INSTALMENT_MAX": "Montant maximum dû",
             "EXT_SOURCE_3_2": "Source externe 3²",
@@ -219,3 +234,5 @@ if client_id:
 
     except Exception as e:
         st.error(f"Erreur lors de la simulation : {e}")
+else:
+    st.warning("Veuillez sélectionner un client pour afficher le tableau de bord.")
