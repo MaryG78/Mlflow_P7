@@ -22,7 +22,6 @@ mlruns/
 *.xlsx
 
 # Ignorer les images et visualisations générées
-*.png
 *.jpg
 *.jpeg
 
