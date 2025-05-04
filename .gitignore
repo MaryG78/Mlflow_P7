@@ -15,8 +15,6 @@ mlruns/
 
 # Ignorer les fichiers de logs et caches
 *.log
-*.csv
-*.parquet
 *.json
 
 # Ignorer les fichiers Word et Excel
