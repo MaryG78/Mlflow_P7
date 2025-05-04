@@ -29,5 +29,5 @@ mlruns/
 *.jpeg
 
 # 🛑 Ignorer les fichiers spécifiques au projet
-saved_data/
+saved_dataP7/
 Données P7/
