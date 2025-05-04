@@ -1,7 +1,12 @@
 streamlit
 pandas
 numpy
-requests
-plotly
-shap
 scikit-learn
+matplotlib
+seaborn
+plotly
+joblib
+shap
+lime
+requests
+
