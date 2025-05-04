@@ -53,71 +53,7 @@ def plot_score_gauge(score_data, threshold=SEUIL_METIER):
     add_alt_text("Jauge de score indiquant la probabilité de défaut du client avec code couleur.")
     st.plotly_chart(fig, use_container_width=True)
 
-# Feature importance gloable avec SHAP
-def plot_global_feature_importance(pipeline_model, df, max_display=10):
-    try:
-        # Si pipeline scikit-learn
-        if hasattr(pipeline_model, 'named_steps'):
-            if "model" in pipeline_model.named_steps:
-                model_lgbm = pipeline_model.named_steps["model"]
-            else:
-                raise ValueError("Le pipeline ne contient pas de modèle sous 'model'.")
 
-            if "preprocessor" in pipeline_model.named_steps:
-                preprocessor = pipeline_model.named_steps["preprocessor"]
-                X_transformed = preprocessor.transform(df)
-                X_transformed = pd.DataFrame(
-                    X_transformed,
-                    columns=preprocessor.get_feature_names_out(),
-                    index=df.index
-                )
-                feature_names = preprocessor.get_feature_names_out()
-            else:
-                X_transformed = df
-                feature_names = df.columns
-
-        else:
-            # Si on a passé seulement le modèle directement
-            model_lgbm = pipeline_model
-            X_transformed = df
-            feature_names = df.columns
-
-        explainer = shap.TreeExplainer(model_lgbm)
-        shap_values = explainer.shap_values(X_transformed.iloc[:100])[1]
-        feature_importance = np.abs(shap_values).mean(0)  # Plus besoin de .values
-        feature_importance_dict = {
-            name: importance for name, importance in zip(feature_names, feature_importance)
-        }
-        sorted_features = sorted(feature_importance_dict.items(), key=lambda x: x[1], reverse=True)[:max_display]
-        df_importance = pd.DataFrame(sorted_features, columns=['Feature', 'Importance'])
-
-        fig = px.bar(
-            df_importance,
-            x='Importance',
-            y='Feature',
-            orientation='h',
-            title=f"Importance globale des variables (SHAP - Top {max_display})",
-            color='Importance',
-            color_continuous_scale='Blues'
-        )
-
-        fig.update_layout(
-            yaxis={'categoryorder': 'total ascending'},
-            height=500,
-            margin=dict(l=20, r=20, t=40, b=20),
-        )
-        fig = apply_accessible_style(fig)
-        add_alt_text(f"Graphique en barres montrant l'importance des {max_display} variables les plus influentes selon SHAP.")
-        return fig
-
-    except Exception as e:
-        st.warning(f"Erreur lors de la génération du graphique d'importance globale: {e}")
-        fig = plt.figure(figsize=(10, 6))
-        plt.text(0.5, 0.5, f"Impossible de générer le graphique: {str(e)}", 
-                 horizontalalignment='center', verticalalignment='center')
-        plt.axis('off')
-        add_alt_text("Graphique en barres montrant l'importance des variables, non disponible en raison d'une erreur.")
-        return fig
 
 # Feature importance locale avec LIME
 def plot_lime_local(pipeline, client_data, all_clients_data, expected_score):

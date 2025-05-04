@@ -11,7 +11,6 @@ from shap_model_utils import load_shap_model
 from visualizations import (
     plot_score_gauge,
     plot_lime_local,
-    plot_global_feature_importance,
     plot_feature_distribution,
     plot_variable_by_target,
     plot_bivariate_analysis_with_density,
@@ -99,31 +98,20 @@ if client_id:
     with col_globale:
         st.subheader("🌍 Importance globale des variables")
         with st.expander("Voir l'interprétation globale"):
+            image_path = "dashboard_scoring/assets/global_importance.png"
             try:
-                df_features = df_all_clients[client_data.columns]
-
-                pipeline_model = load_shap_model()
-                if isinstance(pipeline_model, tuple):
-                    pipeline_model = pipeline_model[1]
-
-                fig_global_shap = plot_global_feature_importance(pipeline_model, df_features)
-
-                if hasattr(fig_global_shap, 'update_layout'):
-                    st.plotly_chart(fig_global_shap, use_container_width=True)
-                else:
-                    st.pyplot(fig_global_shap)
+                image = Image.open(image_path)
+                st.image(image, caption="Importance globale des variables (SHAP)", use_column_width=True)
             except Exception as e:
-                st.error(f"Erreur lors de l'affichage de l'importance globale: {e}")
-                st.info("Une erreur s'est produite. Essayez de recharger la page.")
+                st.error(f"Erreur lors de l'affichage de l'image d'importance globale : {e}")
 
     # Interprétation niveau client
     with col_locale:
         st.subheader("📊 Interprétation locale du score")
         with st.expander("Voir l'interprétation locale"):
             try:
-                model = load_shap_model()
                 fig_lime = plot_lime_local(
-                    pipeline=model,
+                    pipeline=score_data["model"],
                     client_data=client_data,
                     all_clients_data=df_all_clients,
                     expected_score=score_data["score"]
