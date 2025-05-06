@@ -88,8 +88,10 @@ def load_application_train():
 # Fonction pour charger le modèle depuis GitHub
 @st.cache_resource
 def load_model_from_github():
-    url = "https://raw.githubusercontent.com/MaryG78/Mlflow_P7/main/best_model_20_features.joblib"
-    model_path = "saved_data/best_model_20_features.joblib"
+    url = "https://raw.githubusercontent.com/MaryG78/Mlflow_P7/dashboard_scoring/saved_data/best_model_20_features.joblib"
+    model_path = os.path.join("saved_data", "best_model_20_features.joblib")
+
+    # Si le modèle n'existe pas encore en local, le télécharger
     if not os.path.exists(model_path):
         os.makedirs(os.path.dirname(model_path), exist_ok=True)
         response = requests.get(url)
@@ -99,6 +101,8 @@ def load_model_from_github():
         else:
             st.error(f"Erreur lors du téléchargement du modèle: {response.status_code}")
             return None
+
+    # Charger le modèle
     try:
         return joblib.load(model_path)
     except Exception as e:
