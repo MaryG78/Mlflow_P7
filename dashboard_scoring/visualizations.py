@@ -52,7 +52,7 @@ def plot_score_gauge(score_data, threshold=SEUIL_METIER):
     fig = apply_accessible_style(fig)
     add_alt_text("Jauge de score indiquant la probabilité de défaut du client avec code couleur.")
     st.plotly_chart(fig, use_container_width=True)
-    return status
+
 
 
 # Feature importance locale avec LIME
@@ -151,7 +151,7 @@ def plot_lime_local(pipeline, client_data, all_clients_data, expected_score):
 
         # Création du graphique
         fig = explanation.as_pyplot_figure()
-        plt.title(f'Facteurs influençant la prédiction)', fontsize=13)
+        plt.title(f'Facteurs influençant la prédiction', fontsize=13)
         plt.tight_layout()
         fig = apply_accessible_style(fig)
         add_alt_text("Graphique expliquant localement la prédiction du modèle pour ce client avec LIME.")
