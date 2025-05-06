@@ -130,7 +130,7 @@ if client_id:
                 
                 if model is None:
                     st.warning("Le modèle n'a pas pu être chargé depuis GitHub. L'interprétation locale n'est pas disponible.")
-                    return
+                    st.stop()
                 
                 # Utiliser le modèle pour l'explication LIME
                 fig_lime = plot_lime_local(
