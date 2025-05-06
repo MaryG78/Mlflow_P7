@@ -122,16 +122,18 @@ if client_id:
                 st.error("Image d'importance globale non trouvée. Chemins vérifiés : " + ", ".join(possible_image_paths))
 
     # Interprétation niveau client
+    model = load_model_from_github()
+
     with col_locale:
     st.subheader("📊 Interprétation locale du score")
-    with st.expander("Voir l'interprétation locale"):
+    with st.expander("Voir l’interprétation locale"):
         try:
-            model = load_model_from_github()
-
+            # Vérifier que le modèle est bien chargé
             if model is None:
-                st.warning("Le modèle n'a pas pu être chargé depuis GitHub. L'interprétation locale n'est pas disponible.")
+                st.warning("Le modèle n'a pas pu être chargé. L’interprétation locale n’est pas disponible.")
                 st.stop()
 
+            # Générer l’explication LIME
             fig_lime = plot_lime_local(
                 pipeline=model,
                 client_data=client_data,
@@ -142,7 +144,9 @@ if client_id:
 
         except Exception as e:
             st.error(f"Erreur LIME : {e}")
+            import traceback
             st.code(traceback.format_exc())
+
 
     st.subheader("📊 Analyse des variables selon la cible (TARGET)")
     try:
