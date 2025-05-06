@@ -114,7 +114,7 @@ if client_id:
                 try:
                     if os.path.exists(image_path):
                         image = PILImage.open(image_path)
-                        st.image(image, caption="Importance globale des variables (SHAP)", use_column_width=True)
+                        st.image(image, caption="Importance globale des variables (SHAP)", use_container_width=True)
                         image_found = True
                         break
                 except Exception as e:

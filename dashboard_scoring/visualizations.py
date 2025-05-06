@@ -52,6 +52,7 @@ def plot_score_gauge(score_data, threshold=SEUIL_METIER):
     fig = apply_accessible_style(fig)
     add_alt_text("Jauge de score indiquant la probabilité de défaut du client avec code couleur.")
     st.plotly_chart(fig, use_container_width=True)
+    return status
 
 
 # Feature importance locale avec LIME
@@ -150,7 +151,7 @@ def plot_lime_local(pipeline, client_data, all_clients_data, expected_score):
 
         # Création du graphique
         fig = explanation.as_pyplot_figure()
-        plt.title(f'Facteurs influençant la prédiction (probabilité de défaut: {expected_score:.1%})', fontsize=12)
+        plt.title(f'Facteurs influençant la prédiction)', fontsize=13)
         plt.tight_layout()
         fig = apply_accessible_style(fig)
         add_alt_text("Graphique expliquant localement la prédiction du modèle pour ce client avec LIME.")
@@ -237,7 +238,8 @@ def plot_variable_by_target(df, variable="AMT_INCOME_TOTAL", client_value=None):
             y=taux_par_tranche["TARGET"],
             marker_color="#e74c3c",
             text=[f"{p:.1%}" for p in taux_par_tranche["TARGET"]],
-            textposition="auto"
+            textposition="auto",
+            showlegend=False
         ))
 
         if client_value is not None:
@@ -279,12 +281,20 @@ def plot_bivariate_analysis_with_density(df, feature_x, feature_y, target_col, c
     # Convertir TARGET en string pour affichage
     df[target_col] = df[target_col].astype(str)
 
-    # Nombre de clients
-    nb_clients = len(df)
+    # Supprimer les valeurs extrêmes (1% - 99%)
+    q_low_x, q_high_x = df[feature_x].quantile([0.01, 0.99])
+    q_low_y, q_high_y = df[feature_y].quantile([0.01, 0.99])
+    df_filtered = df[
+        (df[feature_x].between(q_low_x, q_high_x)) &
+        (df[feature_y].between(q_low_y, q_high_y))
+    ].copy()
+
+    # Nombre de clients affichés
+    nb_clients = len(df_filtered)
 
     # Créer le graphique
     fig = px.scatter(
-        df,
+        df_filtered,
         x=feature_x,
         y=feature_y,
         color=target_col,
@@ -297,7 +307,7 @@ def plot_bivariate_analysis_with_density(df, feature_x, feature_y, target_col, c
             target_col: "Cible (TARGET)"
         },
         height=600,
-        title=f"Analyse bivariée sur tous les clients ({nb_clients} affichés)"
+        title=f"Analyse bivariée sur les clients filtrés ({nb_clients} affichés)"
     )
 
     # Ajouter le point du client
@@ -310,7 +320,7 @@ def plot_bivariate_analysis_with_density(df, feature_x, feature_y, target_col, c
     ))
 
     fig = apply_accessible_style(fig)
-    add_alt_text("Nuage de points Revenus vs Annuités avec code couleur pour la cible de crédit et indication du client.")
+    add_alt_text("Nuage de points Revenus vs Annuités (valeurs extrêmes supprimées) avec le client en noir.")
 
     return fig
 
@@ -327,12 +337,20 @@ def plot_bivariate_payment_behavior(df, feature_x, feature_y, target_col, client
     # Convertir TARGET en string pour affichage
     df[target_col] = df[target_col].astype(str)
 
-    # Nombre de clients
-    nb_clients = len(df)
+    # Supprimer les valeurs extrêmes (1% - 99%)
+    q_low_x, q_high_x = df[feature_x].quantile([0.01, 0.99])
+    q_low_y, q_high_y = df[feature_y].quantile([0.01, 0.99])
+    df_filtered = df[
+        (df[feature_x].between(q_low_x, q_high_x)) &
+        (df[feature_y].between(q_low_y, q_high_y))
+    ].copy()
+
+    # Nombre de clients retenus
+    nb_clients = len(df_filtered)
 
     # Créer le graphique
     fig = px.scatter(
-        df,
+        df_filtered,
         x=feature_x,
         y=feature_y,
         color=target_col,
@@ -345,7 +363,7 @@ def plot_bivariate_payment_behavior(df, feature_x, feature_y, target_col, client
             target_col: "Cible (TARGET)"
         },
         height=600,
-        title=f"Analyse bivariée sur tous les clients ({nb_clients} affichés)"
+        title=f"Analyse bivariée sur les clients filtrés ({nb_clients} affichés)"
     )
 
     # Ajouter le point du client
@@ -358,7 +376,6 @@ def plot_bivariate_payment_behavior(df, feature_x, feature_y, target_col, client
     ))
 
     fig = apply_accessible_style(fig)
-    add_alt_text("Nuage de points comportement de paiement : proportion payé vs mensualités moyennes, avec le point du client.")
+    add_alt_text("Nuage de points comportement de paiement : proportion payé vs mensualités moyennes, avec le point du client (valeurs extrêmes supprimées).")
 
     return fig
-

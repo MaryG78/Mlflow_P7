@@ -25,9 +25,9 @@ def get_accessible_color_for_score(score, threshold=0.5):
     """
     Renvoie une couleur accessible avec label explicite selon le score
     """
-    if score <= threshold - 0.1:
+    if score <= threshold * 0.9:
         return COLORS_WCAG["accepted"], "Accepté"
-    elif score >= threshold + 0.1:
+    elif score >= threshold * 1.1:
         return COLORS_WCAG["refused"], "Refusé"
     else:
         return COLORS_WCAG["borderline"], "Limite"
