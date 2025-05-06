@@ -10,5 +10,7 @@ shap
 lime
 requests
 imbalanced-learn
+lightgbm
+
 
 
