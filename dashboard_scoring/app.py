@@ -54,6 +54,8 @@ if client_id:
         raw_client_info = raw_client_info.iloc[0]
         df_all_clients = load_all_clients()
 
+        model = load_model_from_github()
+
         feature_cols = list(client_data.columns)
         X = df_all_clients[feature_cols].copy()
         X.replace([np.inf, -np.inf], np.nan, inplace=True)
@@ -122,8 +124,6 @@ if client_id:
                 st.error("Image d'importance globale non trouvée. Chemins vérifiés : " + ", ".join(possible_image_paths))
 
     # Interprétation niveau client
-    model = load_model_from_github()
-
     with col_locale:
         st.subheader("📊 Interprétation locale du score")
         with st.expander("Voir l’interprétation locale"):
