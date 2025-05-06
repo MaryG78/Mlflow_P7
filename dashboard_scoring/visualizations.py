@@ -276,25 +276,15 @@ def plot_bivariate_analysis_with_density(df, feature_x, feature_y, target_col, c
     client_x = float(client_row[feature_x])
     client_y = float(client_row[feature_y])
 
-    # Définir les bornes à ±10 %
-    x_min, x_max = client_x * 0.9, client_x * 1.1
-    y_min, y_max = client_y * 0.9, client_y * 1.1
-
-    # Filtrer les clients proches du client cible 
-    df_filtered = df[
-        (df[feature_x].between(x_min, x_max)) &
-        (df[feature_y].between(y_min, y_max))
-    ].copy()
-
     # Convertir TARGET en string pour affichage
-    df_filtered[target_col] = df_filtered[target_col].astype(str)
+    df[target_col] = df[target_col].astype(str)
 
-    # Nombre de clients retenus
-    nb_clients = len(df_filtered)
+    # Nombre de clients
+    nb_clients = len(df)
 
     # Créer le graphique
     fig = px.scatter(
-        df_filtered,
+        df,
         x=feature_x,
         y=feature_y,
         color=target_col,
@@ -307,7 +297,7 @@ def plot_bivariate_analysis_with_density(df, feature_x, feature_y, target_col, c
             target_col: "Cible (TARGET)"
         },
         height=600,
-        title=f"Analyse bivariée ±10% autour du client ({nb_clients} clients affichés)"
+        title=f"Analyse bivariée sur tous les clients ({nb_clients} affichés)"
     )
 
     # Ajouter le point du client
@@ -318,6 +308,7 @@ def plot_bivariate_analysis_with_density(df, feature_x, feature_y, target_col, c
         marker=dict(size=12, color='black', symbol='x'),
         name="Client"
     ))
+
     fig = apply_accessible_style(fig)
     add_alt_text("Nuage de points Revenus vs Annuités avec code couleur pour la cible de crédit et indication du client.")
 
@@ -326,30 +317,22 @@ def plot_bivariate_analysis_with_density(df, feature_x, feature_y, target_col, c
 
 # Analyse bivariée comportement de paiements
 def plot_bivariate_payment_behavior(df, feature_x, feature_y, target_col, client_row):
+    import plotly.express as px
+    import plotly.graph_objects as go
 
     # Valeurs du client
     client_x = float(client_row[feature_x])
     client_y = float(client_row[feature_y])
 
-    # Définir les bornes à ±10 %
-    x_min, x_max = client_x * 0.9, client_x * 1.1
-    y_min, y_max = client_y * 0.9, client_y * 1.1
-
-    # Filtrer les clients proches du client cible 
-    df_filtered = df[
-        (df[feature_x].between(x_min, x_max)) &
-        (df[feature_y].between(y_min, y_max))
-    ].copy()
-
     # Convertir TARGET en string pour affichage
-    df_filtered[target_col] = df_filtered[target_col].astype(str)
+    df[target_col] = df[target_col].astype(str)
 
-    # Nombre de clients retenus
-    nb_clients = len(df_filtered)
+    # Nombre de clients
+    nb_clients = len(df)
 
     # Créer le graphique
     fig = px.scatter(
-        df_filtered,
+        df,
         x=feature_x,
         y=feature_y,
         color=target_col,
@@ -362,7 +345,7 @@ def plot_bivariate_payment_behavior(df, feature_x, feature_y, target_col, client
             target_col: "Cible (TARGET)"
         },
         height=600,
-        title=f"Analyse bivariée ±10% autour du client ({nb_clients} clients affichés)"
+        title=f"Analyse bivariée sur tous les clients ({nb_clients} affichés)"
     )
 
     # Ajouter le point du client
@@ -373,6 +356,7 @@ def plot_bivariate_payment_behavior(df, feature_x, feature_y, target_col, client
         marker=dict(size=12, color='black', symbol='x'),
         name="Client"
     ))
+
     fig = apply_accessible_style(fig)
     add_alt_text("Nuage de points comportement de paiement : proportion payé vs mensualités moyennes, avec le point du client.")
 

@@ -123,29 +123,26 @@ if client_id:
 
     # Interprétation niveau client
     with col_locale:
-        st.subheader("📊 Interprétation locale du score")
-        with st.expander("Voir l'interprétation locale"):
-            try:
-                # Utiliser le modèle déjà chargé si possible
-                if model is None:
-                    model = load_model_from_github()
+    st.subheader("📊 Interprétation locale du score")
+    with st.expander("Voir l'interprétation locale"):
+        try:
+            model = load_model_from_github()
 
-                if model is None:
-                    st.warning("Le modèle n'a pas pu être chargé depuis GitHub. L'interprétation locale n'est pas disponible.")
-                    st.stop()
+            if model is None:
+                st.warning("Le modèle n'a pas pu être chargé depuis GitHub. L'interprétation locale n'est pas disponible.")
+                st.stop()
 
-                # Générer l'explication LIME
-                fig_lime = plot_lime_local(
-                    pipeline=model,
-                    client_data=client_data,
-                    all_clients_data=df_all_clients,
-                    expected_score=score_data["score"]
-                )
-                st.pyplot(fig_lime)
+            fig_lime = plot_lime_local(
+                pipeline=model,
+                client_data=client_data,
+                all_clients_data=df_all_clients,
+                expected_score=score_data["score"]
+            )
+            st.pyplot(fig_lime)
 
-            except Exception as e:
-                st.error(f"Erreur LIME : {e}")
-                st.code(traceback.format_exc())
+        except Exception as e:
+            st.error(f"Erreur LIME : {e}")
+            st.code(traceback.format_exc())
 
     st.subheader("📊 Analyse des variables selon la cible (TARGET)")
     try:
