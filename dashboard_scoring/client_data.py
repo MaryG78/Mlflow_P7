@@ -81,3 +81,23 @@ def load_application_train():
     except Exception as e:
         st.error(f"Erreur lors du chargement de application_train.csv: {e}")
         return pd.DataFrame()
+
+# Fonction pour charger le modèle depuis GitHub
+@st.cache_resource
+def load_model_from_github():
+    url = "https://raw.githubusercontent.com/MaryG78/Mlflow_P7/main/best_model_20_features.joblib"
+    model_path = "saved_data/best_model_20_features.joblib"
+    if not os.path.exists(model_path):
+        os.makedirs(os.path.dirname(model_path), exist_ok=True)
+        response = requests.get(url)
+        if response.status_code == 200:
+            with open(model_path, "wb") as f:
+                f.write(response.content)
+        else:
+            st.error(f"Erreur lors du téléchargement du modèle: {response.status_code}")
+            return None
+    try:
+        return joblib.load(model_path)
+    except Exception as e:
+        st.error(f"Erreur lors du chargement du modèle: {e}")
+        return None

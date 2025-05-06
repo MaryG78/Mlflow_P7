@@ -7,6 +7,7 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np
 from api_utils import get_client_score
+from PIL import Image as PILImage
 from visualizations import (
     plot_score_gauge,
     plot_lime_local,
@@ -15,7 +16,7 @@ from visualizations import (
     plot_bivariate_analysis_with_density,
     plot_bivariate_payment_behavior
 )
-from client_data import get_client_list, get_client_data, get_raw_client_info, load_all_clients, load_application_train
+from client_data import get_client_list, get_client_data, get_raw_client_info, load_all_clients, load_application_train, def load_model_from_github
 
 st.set_page_config(page_title="Dashboard Scoring Crédit", layout="wide")
 st.title("📊 Dashboard Scoring - Relation Client")
@@ -97,20 +98,43 @@ if client_id:
     with col_globale:
         st.subheader("🌍 Importance globale des variables")
         with st.expander("Voir l'interprétation globale"):
-            image_path = "dashboard_scoring/assets/global_importance.png"
-            try:
-                image = Image.open(image_path)
-                st.image(image, caption="Importance globale des variables (SHAP)", use_column_width=True)
-            except Exception as e:
-                st.error(f"Erreur lors de l'affichage de l'image d'importance globale : {e}")
+            # Liste des chemins possibles
+            possible_image_paths = [
+                "dashboard_scoring/assets/global_importance.png",
+                "assets/global_importance.png",
+                "global_importance.png",
+                "saved_data/global_importance.png"
+            ]
+            
+            image_found = False
+            for image_path in possible_image_paths:
+                try:
+                    if os.path.exists(image_path):
+                        image = PILImage.open(image_path)
+                        st.image(image, caption="Importance globale des variables (SHAP)", use_column_width=True)
+                        image_found = True
+                        break
+                except Exception as e:
+                    pass
+            
+            if not image_found:
+                st.error("Image d'importance globale non trouvée. Chemins vérifiés : " + ", ".join(possible_image_paths))
 
     # Interprétation niveau client
     with col_locale:
         st.subheader("📊 Interprétation locale du score")
         with st.expander("Voir l'interprétation locale"):
             try:
+                # Charger le modèle depuis GitHub
+                model = load_model_from_github()
+                
+                if model is None:
+                    st.warning("Le modèle n'a pas pu être chargé depuis GitHub. L'interprétation locale n'est pas disponible.")
+                    return
+                
+                # Utiliser le modèle pour l'explication LIME
                 fig_lime = plot_lime_local(
-                    pipeline=score_data["model"],
+                    pipeline=model,
                     client_data=client_data,
                     all_clients_data=df_all_clients,
                     expected_score=score_data["score"]
@@ -118,6 +142,7 @@ if client_id:
                 st.pyplot(fig_lime)
             except Exception as e:
                 st.error(f"Erreur LIME : {e}")
+                st.error("Détails de l'erreur:", exc_info=True)
 
     st.subheader("📊 Analyse des variables selon la cible (TARGET)")
     try:

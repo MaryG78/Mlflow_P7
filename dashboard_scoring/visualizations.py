@@ -54,7 +54,6 @@ def plot_score_gauge(score_data, threshold=SEUIL_METIER):
     st.plotly_chart(fig, use_container_width=True)
 
 
-
 # Feature importance locale avec LIME
 def plot_lime_local(pipeline, client_data, all_clients_data, expected_score):
     try:
@@ -65,14 +64,24 @@ def plot_lime_local(pipeline, client_data, all_clients_data, expected_score):
         if pipeline is None:
             raise ValueError("Le modèle est manquant")
 
+        # Vérifier si le pipeline a des feature_names_in_ ou si nous devons utiliser les colonnes du client_data
         if hasattr(pipeline, 'feature_names_in_'):
             feature_cols = list(pipeline.feature_names_in_)
+        elif hasattr(pipeline, 'feature_names'):
+            feature_cols = list(pipeline.feature_names)
         else:
             feature_cols = client_data.columns.tolist()
+            # Si SK_ID_CURR est dans les colonnes, on l'exclut
+            if 'SK_ID_CURR' in feature_cols:
+                feature_cols.remove('SK_ID_CURR')
 
+        # Vérification que toutes les colonnes nécessaires sont disponibles
         missing_cols = [col for col in feature_cols if col not in all_clients_data.columns]
         if missing_cols:
-            raise ValueError(f"Colonnes manquantes dans all_clients_data: {missing_cols}")
+            available_cols = [col for col in feature_cols if col in all_clients_data.columns]
+            st.warning(f"Colonnes manquantes dans all_clients_data (utilisant {len(available_cols)}/{len(feature_cols)} colonnes): {missing_cols}")
+            # Utiliser uniquement les colonnes disponibles
+            feature_cols = available_cols
 
         client_id = None
         if "SK_ID_CURR" in all_clients_data.columns and client_data.index.size > 0:
@@ -112,6 +121,7 @@ def plot_lime_local(pipeline, client_data, all_clients_data, expected_score):
         if np.isnan(client_values).any() or np.isinf(client_values).any():
             client_values = np.nan_to_num(client_values)
 
+        # Création de l'explainer LIME
         explainer = lime.lime_tabular.LimeTabularExplainer(
             X.values,
             feature_names=feature_cols,
@@ -120,12 +130,25 @@ def plot_lime_local(pipeline, client_data, all_clients_data, expected_score):
             mode='classification'
         )
 
+        # Fonction de prédiction adaptée au modèle chargé
+        def predict_fn(x):
+            # Vérifier si le modèle possède predict_proba ou s'il faut utiliser predict
+            if hasattr(pipeline, 'predict_proba'):
+                return pipeline.predict_proba(pd.DataFrame(x, columns=feature_cols))
+            else:
+                # Fallback vers une simple prédiction binaire si predict_proba n'existe pas
+                # Prédictions binaires converties en pseudo-probabilités [1-p, p]
+                preds = pipeline.predict(pd.DataFrame(x, columns=feature_cols))
+                return np.column_stack((1-preds, preds))
+
+        # Génération de l'explication
         explanation = explainer.explain_instance(
             client_values,
-            lambda x: pipeline.predict_proba(pd.DataFrame(x, columns=feature_cols)),
+            predict_fn,
             num_features=8
         )
 
+        # Création du graphique
         fig = explanation.as_pyplot_figure()
         plt.title(f'Facteurs influençant la prédiction (probabilité de défaut: {expected_score:.1%})', fontsize=12)
         plt.tight_layout()
@@ -135,7 +158,8 @@ def plot_lime_local(pipeline, client_data, all_clients_data, expected_score):
         return fig
 
     except Exception as e:
-        st.error(f"Erreur détaillée dans LIME: {e}")
+        st.error(f"Erreur détaillée dans LIME: {str(e)}")
+        import traceback
         st.error(traceback.format_exc())
         fig = plt.figure(figsize=(10, 6))
         plt.text(0.5, 0.5, f"Erreur lors de l'analyse LIME:\n{str(e)}",
@@ -144,7 +168,6 @@ def plot_lime_local(pipeline, client_data, all_clients_data, expected_score):
         add_alt_text("Graphique expliquant localement la prédiction du modèle pour ce client avec LIME.")
 
         return fig
-
 
 def plot_feature_distribution(df, feature, client_value):
     fig = plt.figure(figsize=(8, 4))
