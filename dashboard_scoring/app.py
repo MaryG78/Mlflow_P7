@@ -6,6 +6,7 @@ import shap
 import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np
+import traceback
 from api_utils import get_client_score
 from PIL import Image as PILImage
 from visualizations import (
