@@ -16,7 +16,7 @@ from visualizations import (
     plot_bivariate_analysis_with_density,
     plot_bivariate_payment_behavior
 )
-from client_data import get_client_list, get_client_data, get_raw_client_info, load_all_clients, load_application_train, def load_model_from_github
+from client_data import get_client_list, get_client_data, get_raw_client_info, load_all_clients, load_application_train, load_model_from_github
 
 st.set_page_config(page_title="Dashboard Scoring Crédit", layout="wide")
 st.title("📊 Dashboard Scoring - Relation Client")
