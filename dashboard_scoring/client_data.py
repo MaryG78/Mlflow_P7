@@ -3,6 +3,7 @@ import numpy as np
 import streamlit as st
 import os
 import requests
+import joblib
 
 
 # Fonction utilitaire pour trouver le bon chemin des données
