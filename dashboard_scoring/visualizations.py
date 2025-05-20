@@ -309,7 +309,6 @@ def plot_bivariate_analysis_with_density(df, feature_x, feature_y, target_col, c
             feature_y: "Annuités",
             target_col: "Statut"
         },
-        title="",
         height=600
     )
 
@@ -365,7 +364,6 @@ def plot_bivariate_payment_behavior(df, feature_x, feature_y, target_col, client
             feature_y: "Moy. mensualités",
             target_col: "Statut"
         },
-        title="",
         height=600
     )
 
