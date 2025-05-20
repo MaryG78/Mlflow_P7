@@ -50,8 +50,11 @@ def plot_score_gauge(score_data, threshold=SEUIL_METIER):
     )
 
     fig = apply_accessible_style(fig)
-    add_alt_text("Jauge de score indiquant la probabilité de défaut du client avec code couleur.")
+
     st.plotly_chart(fig, use_container_width=True)
+    # Texte alternatif
+    add_alt_text("Jauge de score indiquant la probabilité de défaut du client avec code couleur.")
+    
 
 
 
@@ -154,7 +157,7 @@ def plot_lime_local(pipeline, client_data, all_clients_data, expected_score):
         plt.title(f'Facteurs influençant la prédiction', fontsize=13)
         plt.tight_layout()
         fig = apply_accessible_style(fig)
-        add_alt_text("Graphique expliquant localement la prédiction du modèle pour ce client avec LIME.")
+        add_alt_text("Graphique montrant les données ayant le plus influencé la décision pour ce client")
 
         return fig
 
@@ -306,6 +309,7 @@ def plot_bivariate_analysis_with_density(df, feature_x, feature_y, target_col, c
             feature_y: "Annuités",
             target_col: "Statut"
         },
+        title="",
         height=600
     )
 
@@ -361,6 +365,7 @@ def plot_bivariate_payment_behavior(df, feature_x, feature_y, target_col, client
             feature_y: "Moy. mensualités",
             target_col: "Statut"
         },
+        title="",
         height=600
     )
 

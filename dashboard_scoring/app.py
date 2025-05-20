@@ -249,6 +249,7 @@ if client_id:
             unsafe_allow_html=True
         )
 
+        add_alt_text("Section de simulation : l'utilisateur peut modifier les caractéristiques du client et obtenir une nouvelle probabilité de défaut de paiement.")
     except Exception as e:
         st.error(f"Erreur lors de la simulation : {e}")
 else:
