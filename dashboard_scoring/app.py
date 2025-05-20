@@ -92,6 +92,9 @@ if client_id:
     with col2:
         st.markdown("<div style='font-size:22px; font-weight:600; margin-bottom: -23px'>📈 Résultat du scoring</div>""", unsafe_allow_html=True)
 
+        # Texte alternatif
+        add_alt_text("Jauge de score indiquant la probabilité de défaut du client avec code couleur.")
+
         plot_score_gauge(score_data)
         score = score_data["score"]
         st.markdown(f"<div style='text-align:center; margin-top: -50px; font-size:20px'><strong>Probabilité de défaut de paiement :</strong> {score:.1%}</div>""", unsafe_allow_html=True)
@@ -102,6 +105,8 @@ if client_id:
     # Interprétation globale
     with col_globale:
         st.subheader("🌍 Importance globale des données")
+        # Texte alternatif
+        add_alt_text("Graphique qui montre l'importance globale des données dans le calcul du score")
         with st.expander("Voir l'interprétation globale"):
             # Liste des chemins possibles
             possible_image_paths = [
