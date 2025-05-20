@@ -50,7 +50,7 @@ def plot_score_gauge(score_data, threshold=SEUIL_METIER):
     )
 
     #fig = apply_accessible_style(fig)
-   #add_alt_text("Jauge de score indiquant la probabilité de défaut du client avec code couleur.")
+    add_alt_text("Jauge de score indiquant la probabilité de défaut du client avec code couleur.")
     st.plotly_chart(fig, use_container_width=True)
 
 
@@ -218,7 +218,7 @@ def plot_variable_by_target(df, variable="AMT_INCOME_TOTAL", client_value=None):
             ))
 
         fig.update_layout(
-            title="Revenu médian selon la cible (TARGET)",
+            title="Revenu médian",
             yaxis_title="Revenu médian (€)",
             xaxis_title="Statut de remboursement",
             height=600
@@ -304,10 +304,9 @@ def plot_bivariate_analysis_with_density(df, feature_x, feature_y, target_col, c
         labels={
             feature_x: "Revenus",
             feature_y: "Annuités",
-            target_col: "Cible (TARGET)"
+            target_col: "Statut"
         },
-        height=600,
-        title=f"Analyse bivariée sur les clients filtrés ({nb_clients} affichés)"
+        height=600
     )
 
     # Ajouter le point du client
@@ -360,10 +359,9 @@ def plot_bivariate_payment_behavior(df, feature_x, feature_y, target_col, client
         labels={
             feature_x: "Moy. proportion payé / dû",
             feature_y: "Moy. mensualités",
-            target_col: "Cible (TARGET)"
+            target_col: "Statut"
         },
-        height=600,
-        title=f"Analyse bivariée sur les clients filtrés ({nb_clients} affichés)"
+        height=600
     )
 
     # Ajouter le point du client

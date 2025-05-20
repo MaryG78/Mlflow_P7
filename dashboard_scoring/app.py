@@ -100,7 +100,7 @@ if client_id:
 
     # Interprétation globale
     with col_globale:
-        st.subheader("🌍 Importance globale des variables")
+        st.subheader("🌍 Importance globale des données")
         with st.expander("Voir l'interprétation globale"):
             # Liste des chemins possibles
             possible_image_paths = [
@@ -149,10 +149,10 @@ if client_id:
                 st.code(traceback.format_exc())
 
 
-    st.subheader("📊 Analyse des variables selon la cible (TARGET)")
+    st.subheader("📊 Positionnement du client par rapport aux revenus et à l'âge")
     try:
         app_train = load_application_train()
-        variable_choice = st.selectbox("Choisissez la variable à afficher :", options=["Revenus", "Âge"])
+        variable_choice = st.selectbox("Choisissez la donnée à afficher :", options=["Revenus", "Âge"])
         if variable_choice == "Revenus":
             selected_var = "AMT_INCOME_TOTAL"
             client_value = raw_client_info["AMT_INCOME_TOTAL"]
@@ -165,7 +165,7 @@ if client_id:
     except Exception as e:
         st.error(f"Erreur lors de l'affichage du graphique: {e}")
 
-    st.subheader("📈 Analyse bivariée par statut de remboursement")
+    st.subheader("📈 Statut du crédit en fonction des revenus et de l'annuité")
     try:
         fig_biv = plot_bivariate_analysis_with_density(
             df=app_train,
@@ -178,7 +178,7 @@ if client_id:
     except Exception as e:
         st.error(f"Erreur lors de l'affichage de l'analyse bivariée: {e}")
 
-    st.subheader("📉 Analyse comportementale : paiements vs retards")
+    st.subheader("📉 Statut du crédit en fonction des mensualités et des retards")
     try:
         df_clients = load_all_clients()
         df_target = load_application_train()[["SK_ID_CURR", "TARGET"]]
