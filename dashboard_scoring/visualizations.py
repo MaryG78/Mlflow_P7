@@ -323,7 +323,7 @@ def plot_bivariate_analysis_with_density(df, feature_x, feature_y, target_col, c
     ))
 
     fig = apply_accessible_style(fig)
-    add_alt_text("Nuage de points Revenus vs Annuités (valeurs extrêmes supprimées) avec le client en noir.")
+    
 
     return fig
 
@@ -379,6 +379,5 @@ def plot_bivariate_payment_behavior(df, feature_x, feature_y, target_col, client
     ))
 
     fig = apply_accessible_style(fig)
-    add_alt_text("Nuage de points comportement de paiement : proportion payé vs mensualités moyennes, avec le point du client (valeurs extrêmes supprimées).")
-
+    
     return fig

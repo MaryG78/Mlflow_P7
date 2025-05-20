@@ -175,6 +175,7 @@ if client_id:
             client_row=raw_client_info
         )
         st.plotly_chart(fig_biv, use_container_width=True)
+        add_alt_text("Nuage de points comportement de paiement : proportion payé vs mensualités moyennes, avec le point du client (valeurs extrêmes supprimées).")
     except Exception as e:
         st.error(f"Erreur lors de l'affichage de l'analyse bivariée: {e}")
 
@@ -194,6 +195,7 @@ if client_id:
             client_row=client_row
         )
         st.plotly_chart(fig_payment, use_container_width=True)
+        add_alt_text("Nuage de points Revenus vs Annuités (valeurs extrêmes supprimées) avec le client en noir.")
     except Exception as e:
         st.error(f"Erreur lors de l'affichage du graphique de comportement de paiement : {e}")
 
