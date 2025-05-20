@@ -42,7 +42,6 @@ def apply_accessible_style(fig):
         if isinstance(fig, go.Figure):
             fig.update_layout(
                 font=dict(size=16, color=COLORS_WCAG["text"]),
-                title_font=dict(size=20),
                 paper_bgcolor="#ffffff",
                 plot_bgcolor="#ffffff"
             )
