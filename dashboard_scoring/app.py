@@ -92,12 +92,11 @@ if client_id:
     with col2:
         st.markdown("<div style='font-size:22px; font-weight:600; margin-bottom: -23px'>📈 Résultat du scoring</div>""", unsafe_allow_html=True)
 
-        # Texte alternatif
-        add_alt_text("Jauge de score indiquant la probabilité de défaut du client avec code couleur.")
-
         plot_score_gauge(score_data)
         score = score_data["score"]
         st.markdown(f"<div style='text-align:center; margin-top: -50px; font-size:20px'><strong>Probabilité de défaut de paiement :</strong> {score:.1%}</div>""", unsafe_allow_html=True)
+        # Texte alternatif
+        add_alt_text("Jauge de score indiquant la probabilité de défaut du client avec code couleur.")
 
     #Interpretation du score (feature importance)
     col_globale, col_locale = st.columns([1, 1])
