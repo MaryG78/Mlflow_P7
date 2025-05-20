@@ -49,7 +49,7 @@ def plot_score_gauge(score_data, threshold=SEUIL_METIER):
         align="center"
     )
 
-    fig = apply_accessible_style(fig)
+    #fig = apply_accessible_style(fig)
 
     st.plotly_chart(fig, use_container_width=True)
     # Texte alternatif

@@ -44,9 +44,17 @@ def apply_accessible_style(fig):
                 font=dict(size=16, color=COLORS_WCAG["text"]),
                 title_font=dict(size=20),
                 paper_bgcolor="#ffffff",
-                plot_bgcolor="#ffffff",
-                legend=dict(font=dict(size=14))
+                plot_bgcolor="#ffffff"
             )
+            # Appliquer un style de titre uniquement s'il existe
+            if "title" in fig.layout and fig.layout.title.text:
+                fig.update_layout(title_font=dict(size=20))
+
+            # Appliquer style légende uniquement si elle existe
+            if "legend" in fig.layout:
+                fig.update_layout(legend=dict(
+                    font=dict(size=16)
+                ))
     except Exception:
         pass  # On ne fait rien si ce n'est pas une figure Plotly ou en cas d'erreur
 
